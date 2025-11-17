@@ -1,0 +1,17 @@
+fastapi
+uvicorn[standard]
+pydantic
+pydantic-settings
+asyncpg
+sqlalchemy[asyncio]
+python-dotenv
+sqlparse
+numpy
+openai
+httpx
+tenacity
+python-multipart
+torch
+transformers
+sentence-transformers
+

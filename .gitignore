@@ -1,0 +1,38 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual env
+.venv/
+env/
+venv/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Env files
+.env
+.env.*
+
+# Logs
+*.log
+
+# IDE folders
+.vscode/
+.idea/
+
+# Local DB stuff
+*.db
+*.sqlite3
+
+# Data directories
+data/embeddings/
+data/schemas/*.json
+!data/schemas/example_schema.json   # allow one dummy example if needed
+
+# Cache
+*.cache
+.cache/

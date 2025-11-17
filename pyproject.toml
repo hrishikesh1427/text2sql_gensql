@@ -1,0 +1,10 @@
+[tool.poetry]
+name = "gen_sql_backend_scaffold"
+version = "0.1.0"
+description = "Gen-SQL backend scaffold"
+authors = ["Generated"]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+fastapi = "*"
+uvicorn = "*"
