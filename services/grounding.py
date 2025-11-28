@@ -73,6 +73,38 @@ def _load_or_create_embeddings(db_id: str, schema: dict):
     return store
 
 
+def regenerate_embeddings(db_id: str, schema: dict = None):
+    """
+    Force regenerate embeddings for a given db_id.
+    If schema is not provided, it will be loaded from the schema file.
+    """
+    if schema is None:
+        schema = load_schema(db_id)
+    
+    emb_file = _emb_path(db_id)
+    
+    # Build cache (force regenerate)
+    tables = list(schema.get("tables", {}).keys())
+    table_vecs = _compute_bulk(tables) if tables else []
+
+    col_keys = []
+    for t, cols in schema.get("tables", {}).items():
+        for c in cols:
+            col_keys.append(f"{t}.{c}")
+
+    col_vecs = _compute_bulk(col_keys) if col_keys else []
+
+    store = {
+        "tables": {t: table_vecs[i] for i, t in enumerate(tables)} if tables else {},
+        "columns": {col_keys[i]: col_vecs[i] for i in range(len(col_keys))} if col_keys else {}
+    }
+
+    with open(emb_file, "w", encoding="utf-8") as f:
+        json.dump(store, f, indent=2)
+
+    return store
+
+
 # ------------------------
 # Cosine similarity
 # ------------------------
