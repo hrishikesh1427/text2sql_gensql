@@ -2,7 +2,7 @@ from pydantic_settings import BaseSettings
 from pydantic import ConfigDict
 
 class Settings(BaseSettings):
-    DATABASE_URL: str = "postgresql+asyncpg://postgres:1234@localhost:5432/slingobot"
+    DATABASE_URL: str  # Required: Set in .env file
     OPENAI_API_KEY: str | None = None
     REFRESH_INTERVAL_SECONDS: int = 300
     MAX_ROWS: int = 1000
