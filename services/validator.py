@@ -13,9 +13,9 @@ def validate_sql(sql: str, grounded_map: dict, relationships: list):
     """
     low = sql.lower()
 
-    # Prevent dangerous operations
-    if any(w in low for w in FORBIDDEN):
-        return False, "Destructive SQL not allowed", None
+    for word in FORBIDDEN:
+        if re.search(rf"\b{word}\b", low):
+            return False, "Destructive SQL not allowed", None
 
     # Build reference maps
     table_cols = {}   # table_name -> set(columns)

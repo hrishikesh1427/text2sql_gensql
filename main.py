@@ -3,7 +3,7 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 import asyncio
 from core.config import settings
-from services import pseudo_schema, grounding, sql_generator, validator, executor
+from services import pseudo_schema, grounding, sql_generator, validator, executor, query_templates
 from workers import refresh_scheduler
 
 app = FastAPI(title="Gen-SQL Backend (Real LLMs)")
@@ -29,6 +29,16 @@ class QueryResponse(BaseModel):
 @app.post("/v1/query", response_model=QueryResponse)
 async def query(req: QueryRequest):
     print(">>> /v1/query request received", req.model_dump())
+
+    # 0. Template shortcuts for frequently asked questions
+    template_sql = query_templates.match_template(req.question)
+    if template_sql:
+        print("Matched template SQL:", template_sql)
+        try:
+            rows = await executor.execute_sql(template_sql, req.db_id, enforce_limit=False)
+            return {"sql": template_sql, "results": rows, "error": None}
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=str(e))
 
     # 1. Load stored schema to provide table hints to pseudo-schema LLM
     schema = grounding.load_schema(req.db_id)
